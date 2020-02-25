@@ -20,4 +20,8 @@ Route::prefix('v1')->namespace('API')->group(function () {
         Route::get('user', 'AuthController@user')->middleware('auth:api');
         Route::post('logout', 'AuthController@logout')->middleware('auth:api');
     });
+
+    Route::middleware('auth:api')->group(function () {
+        Route::apiResource('chats', 'ChatController');
+    });
 });
