@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 /**
@@ -33,5 +34,17 @@ class RegisterRequest extends FormRequest
             'email' => ['required', 'email', Rule::unique('users')],
             'password' => ['required', 'confirmed']
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function data()
+    {
+        return array_merge(
+            $this->only('name', 'email'), [
+                'password' => Hash::make($this->input('password'))
+            ]
+        );
     }
 }

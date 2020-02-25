@@ -1,0 +1,26 @@
+POST http://chat.lcl:8081/api/v1/register
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Accept: application/json
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name"
+
+Yermek Makulbek
+
+--WebAppBoundary--
+Content-Disposition: form-data; name="email"
+
+ermmak@gmail.com
+
+--WebAppBoundary--
+Content-Disposition: form-data; name="password"
+
+1q2w3e4r
+
+--WebAppBoundary--
+Content-Disposition: form-data; name="password_confirmation"
+
+1q2w3e4r
+--WebAppBoundary--
+
+###

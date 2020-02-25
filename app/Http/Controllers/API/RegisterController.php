@@ -4,8 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
+use App\User;
 use Illuminate\Http\Request;
 
+/**
+ * Class RegisterController
+ * @package App\Http\Controllers\API
+ */
 class RegisterController extends Controller
 {
     /**
@@ -14,6 +19,8 @@ class RegisterController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        return response()->json($request->all());
+        $user = new User($request->data());
+
+        return response()->json($user->save());
     }
 }

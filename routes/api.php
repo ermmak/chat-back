@@ -12,12 +12,12 @@
 */
 
 Route::prefix('v1')->namespace('API')->group(function () {
-    Route::post('register', 'RegisterController@register')->name('register');
+    Route::post('register', 'RegisterController@register');
 
     // Auth
-    Route::prefix('auth')->name('auth')->group(function () {
+    Route::prefix('auth')->group(function () {
         Route::post('login', 'AuthController@login');
-        Route::post('logout', 'AuthController@logout')->middleware('auth:api');
         Route::get('user', 'AuthController@user')->middleware('auth:api');
+        Route::post('logout', 'AuthController@logout')->middleware('auth:api');
     });
 });
