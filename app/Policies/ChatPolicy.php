@@ -5,8 +5,11 @@ namespace App\Policies;
 use App\Chat;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Class ChatPolicy
+ * @package App\Policies
+ */
 class ChatPolicy
 {
     use HandlesAuthorization;
@@ -20,7 +23,7 @@ class ChatPolicy
      */
     public function show(User $user, Chat $chat)
     {
-        return $user->chats()->wherePivot('chat_id', $chat->id)->exists();
+        return $user->chats()->where('id', $chat->id)->exists();
     }
 
     /**
@@ -54,6 +57,9 @@ class ChatPolicy
      */
     public function ownsChat(User $user, Chat $chat): bool
     {
-
+        return $user->chats()
+            ->where('id', '=', $chat->id)
+            ->wherePivot('is_admin', true)
+            ->exists();
     }
 }

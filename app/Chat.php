@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 class Chat extends Model
 {
     /**
+     * @var array
+     */
+    protected $fillable = ['name'];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users()

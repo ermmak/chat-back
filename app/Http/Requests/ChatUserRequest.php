@@ -6,10 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class ChatRequest
+ * Class ChatUserRequest
  * @package App\Http\Requests
  */
-class ChatRequest extends FormRequest
+class ChatUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,11 +18,7 @@ class ChatRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($chat = $this->route('chat')) {
-            return $this->user()->can('update', $chat);
-        }
-
-        return true;
+        return $this->user()->can('update', $this->route('chat'));
     }
 
     /**
@@ -33,9 +29,8 @@ class ChatRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'users' => 'array',
-            'users.*' => ['required', 'integer', Rule::exists('users', 'id')]
+            'ids' => 'required|array',
+            'ids.*' => ['required', 'integer', Rule::exists('users', 'id')],
         ];
     }
 }

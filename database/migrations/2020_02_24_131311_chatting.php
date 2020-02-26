@@ -26,7 +26,6 @@ class Chatting extends Migration
             $table->unsignedBigInteger('chat_id');
             $table->unsignedBigInteger('user_id');
             $table->boolean('is_admin')->default(false);
-            $table->timestamps();
 
             $table->unique(['chat_id', 'user_id']);
 

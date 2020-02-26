@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Chat;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChatRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ChatController
@@ -19,53 +22,63 @@ class ChatController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json(
-            $request->user()->load('chats')->chats
-        );
+        return response()->json($request->user()->chats);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ChatRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(ChatRequest $request)
     {
-
+        return response()->json(
+            !!$request->user()->chats()->create($request->validated(), ['is_admin' => true])
+        );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Chat $chat
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show($id)
+    public function show(Chat $chat)
     {
-        //
+        $this->authorize('show', $chat);
+
+        return response()->json($chat);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param ChatRequest $request
+     * @param Chat $chat
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(ChatRequest $request, Chat $chat)
     {
-        //
+        return response()->json($chat->update($request->validated()));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Chat $chat
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(Chat $chat)
     {
-        //
+        $this->authorize('delete', $chat);
+
+        return response()->json(DB::transaction(function () use ($chat) {
+            $chat->users()->detach();
+
+            return $chat->delete();
+        }));
     }
 }
