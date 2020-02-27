@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     /**
+     * @var array
+     */
+    protected $fillable = ['text', 'user_id', 'chat_id'];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function chat()
