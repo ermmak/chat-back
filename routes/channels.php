@@ -11,6 +11,12 @@
 |
 */
 
-Broadcast::channel('App.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+use App\User;
+
+Broadcast::channel('chats', function ($user) {
+    return true;
+});
+
+Broadcast::channel('chat.updated.{chatId}', function (User $user, int $chatId) {
+    return $user->chats()->where('id', $chatId)->exists();
 });

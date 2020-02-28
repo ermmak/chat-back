@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Chat;
+use App\Events\ChatCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChatRequest;
 use Illuminate\Http\Request;
@@ -33,9 +34,17 @@ class ChatController extends Controller
      */
     public function store(ChatRequest $request)
     {
-        return response()->json(
-            !!$request->user()->chats()->create($request->validated(), ['is_admin' => true])
-        );
+        return response()->json(DB::transaction(function () use ($request) {
+            $data = $request->validated();
+            $chat = $request->user()->chats()->create($data, ['is_admin' => true]);
+
+            if ($created = !!$chat) {
+                !empty($usersIds = $data['users']) && $chat->users()->attach($usersIds);
+                event(new ChatCreated($chat));
+            }
+
+            return response()->json($created);
+        }));
     }
 
     /**
