@@ -15,8 +15,10 @@ class UserController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function list()
+    public function list(Request $request)
     {
-        return response()->json(User::all());
+        return response()->json(
+            User::where('id', '<>', $request->user()->id)->get()
+        );
     }
 }

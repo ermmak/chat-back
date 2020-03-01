@@ -38,12 +38,12 @@ class ChatController extends Controller
             $data = $request->validated();
             $chat = $request->user()->chats()->create($data, ['is_admin' => true]);
 
-            if ($created = !!$chat) {
-                !empty($usersIds = $data['users']) && $chat->users()->attach($usersIds);
-                event(new ChatCreated($chat));
+            if (!!$chat) {
+                !empty($data['users']) && $chat->users()->attach($data['users']);
+                event(new ChatCreated);
             }
 
-            return response()->json($created);
+            return response()->json(!!$chat);
         }));
     }
 
