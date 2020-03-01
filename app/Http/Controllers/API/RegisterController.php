@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\User;
-use Illuminate\Http\Request;
 
 /**
  * Class RegisterController
@@ -20,6 +20,10 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request)
     {
         $user = new User($request->data());
+
+        $saved = $user->save();
+
+        $saved && event(new UserRegistered);
 
         return response()->json($user->save());
     }

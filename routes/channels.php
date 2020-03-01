@@ -17,6 +17,10 @@ Broadcast::channel('chats', function ($user) {
     return true;
 });
 
+Broadcast::channel('users', function ($user) {
+    return true;
+});
+
 Broadcast::channel('chat.updated.{chatId}', function (User $user, int $chatId) {
     return $user->chats()->where('id', $chatId)->exists();
 });
