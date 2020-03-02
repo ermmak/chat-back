@@ -2,23 +2,23 @@
 
 namespace App\Events;
 
-use App\Chat;
+use App\Message;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class ChatCreated
+ * Class MessageCreated
  * @package App\Events
  */
-class ChatCreated implements ShouldBroadcast
+class MessageCreated implements ShouldBroadcast
 {
     use SerializesModels;
 
     /**
-     * @var Chat
+     * @var Message
      */
-    public Chat $chat;
+    public Message $message;
 
     /**
      * @var int
@@ -26,14 +26,22 @@ class ChatCreated implements ShouldBroadcast
     protected int $userId;
 
     /**
-     * ChatCreated constructor.
-     * @param Chat $chat
-     * @param int $userId
+     * @var int
      */
-    public function __construct(Chat $chat, int $userId)
+    public int $chatId;
+
+    /**
+     * Create a new event instance.
+     *
+     * @param Message $message
+     * @param int $userId
+     * @param int $chatId
+     */
+    public function __construct(Message $message, int $userId, int $chatId)
     {
-        $this->chat = $chat;
+        $this->message = $message;
         $this->userId = $userId;
+        $this->chatId = $chatId;
     }
 
     /**
@@ -51,6 +59,6 @@ class ChatCreated implements ShouldBroadcast
      */
     public function broadcastAs(): string
     {
-        return 'chat.created';
+        return 'message.created';
     }
 }

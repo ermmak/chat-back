@@ -25,7 +25,7 @@ Route::prefix('v1')->namespace('API')->group(function () {
         // Chats
         Route::apiResource('chats', 'ChatController');
         Route::apiResource('chats.users', 'ChatUserController')->except('show', 'update');
-        Route::apiResource('chats.messages', 'ChatMessageController')->except('show', 'update');
+        Route::apiResource('chats.messages', 'ChatMessageController')->only('index', 'store');
         Route::post('chats/{chat}/users/attach', 'ChatUserController@attach')->name('chats.users.attach');
 
         Route::get('users', 'UserController@list');

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Chat;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChatUserRequest;
-use http\Env\Request;
 
 /**
  * Class ChatUserController

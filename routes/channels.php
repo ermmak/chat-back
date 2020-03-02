@@ -13,8 +13,8 @@
 
 use App\User;
 
-Broadcast::channel('chats', function ($user) {
-    return true;
+Broadcast::channel('chats.{userId}', function (User $user, int $userId) {
+    return $user->id === $userId;
 });
 
 Broadcast::channel('users', function ($user) {

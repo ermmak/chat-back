@@ -1,4 +1,4 @@
-POST http://chat.lcl/api/v1/auth/login
+POST http://chat.lcl:8081/api/v1/auth/login
 Content-Type: application/json
 Accept: application/json
 

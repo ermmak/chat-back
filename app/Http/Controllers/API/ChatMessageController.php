@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Chat;
+use App\Events\MessageCreated;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MessageRequest;
 use App\Message;
-use Illuminate\Http\Request;
 
 /**
  * Class ChatMessageController
@@ -27,30 +28,26 @@ class ChatMessageController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param MessageRequest $request
      * @param Chat $chat
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(Request $request, Chat $chat)
+    public function store(MessageRequest $request, Chat $chat)
     {
-        $this->authorize('store', [Message::class, $chat]);
-
-        return response()->json(!!Message::create([
+        $message = new Message([
             'user_id' => $request->user()->id,
             'chat_id' => $chat->id,
             'text' => $request->input('text')
-        ]));
-    }
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $created = $message->save();
+
+        if ($created) {
+            collect($message->chat->users)->each(
+                fn($user) => event(new MessageCreated($message, $user->id, $chat->id))
+            );
+        }
+
+        return response()->json($created);
     }
 }
